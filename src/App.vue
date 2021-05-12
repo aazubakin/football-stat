@@ -1,8 +1,11 @@
 <template>
   <div id="app">
+    <h1 class="mt-5 text-2xl">Турнирные таблицы результатов по футболу</h1>
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Список лиг</router-link> |
+      <router-link to="/teams">Список команд</router-link> |
+      <router-link to="/ligue_calendar">Календарь лиги</router-link> |
+      <router-link to="/team_calendar">Календарь одной команды</router-link>
     </div>
     <router-view />
   </div>

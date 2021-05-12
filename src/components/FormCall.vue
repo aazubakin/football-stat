@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center font-sans">
-    <form class="grid w-px=400" @submit.prevent="submit">
+    <form class="grid w-px=400 mx-2" @submit.prevent="submit">
       <label for="token">
         Enter your API token from football-data.org here
       </label>
@@ -15,6 +15,8 @@
         class="p-2 bg-blue-700 hover:bg-blue-500 c shadow-md cursor-pointer text-blue-50 rounded"
         type="submit"
         value="Submit"
+        :class="{ 'opacity-40': isDesabled }"
+        :disabled="isDesabled"
       />
       <div class="my-3" v-if="errors.length">
         <p>Please correct the following error(s):</p>
@@ -29,15 +31,17 @@
 </template>
 
 <script>
-import apiClient from "../utils/apiCalls";
-
 export default {
-  name: "Home",
+  name: "FormCall",
   data() {
     return {
       token: null,
       errors: [],
     };
+  },
+  props: {
+    errorMessage: Error,
+    isDesabled: Boolean,
   },
   methods: {
     submit() {
@@ -48,16 +52,17 @@ export default {
         this.errors.push("Invalid token, length must be more than 21 symbols");
       }
       if (this.errors.length === 0) {
-        apiClient
-          .getStat("competitions/", this.token)
-          .then((response) => console.log(response.data))
-          .catch((e) => this.errors.push(e));
+        this.$emit("submit", this.token);
       }
     },
   },
   watch: {
     token() {
       this.errors = [];
+      this.$emit("tokenChange");
+    },
+    errorMessage() {
+      this.errors.push(this.errorMessage);
     },
   },
 };
