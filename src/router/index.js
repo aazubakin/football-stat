@@ -20,6 +20,10 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/Teams.vue"),
   },
   {
+    path: "/teams/:id",
+    component: () => import("../views/Teams.vue"),
+  },
+  {
     path: "/ligue_calendar",
     name: "LigueCalendar",
     component: () => import("../views/LigueCalendar.vue"),

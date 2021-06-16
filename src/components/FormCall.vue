@@ -9,7 +9,7 @@
         name="token"
         type="text"
         v-model="token"
-        placeholder="Your token"
+        :placeholder="isDesabled ? token : 'Your token'"
       />
       <input
         class="p-2 bg-blue-700 hover:bg-blue-500 c shadow-md cursor-pointer text-blue-50 rounded"
@@ -43,6 +43,10 @@ export default {
     errorMessage: Error,
     isDesabled: Boolean,
   },
+  mounted() {
+    if (localStorage.getItem("token"))
+      this.token = localStorage.getItem("token");
+  },
   methods: {
     submit() {
       this.errors = [];
@@ -53,6 +57,7 @@ export default {
       }
       if (this.errors.length === 0) {
         this.$emit("submit", this.token);
+        localStorage.setItem("token", this.token);
       }
     },
   },

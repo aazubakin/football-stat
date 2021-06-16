@@ -4,7 +4,6 @@
     <div id="nav">
       <router-link to="/">Список лиг</router-link> |
       <router-link to="/teams">Список команд</router-link> |
-      <router-link to="/ligue_calendar">Календарь лиги</router-link> |
       <router-link to="/team_calendar">Календарь одной команды</router-link>
     </div>
     <router-view />
