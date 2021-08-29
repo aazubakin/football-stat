@@ -1,9 +1,11 @@
 import axios from "axios";
+const token = process.env.VUE_APP_API;
+const baseURL = process.env.VUE_APP_URL;
 
 export default {
-  getStat(url, token) {
+  getStat(url) {
     const apiClient = axios.create({
-      baseURL: "http://api.football-data.org/v2/",
+      baseURL: baseURL,
       headers: {
         Accept: "application/json",
         "X-Auth-Token": token,

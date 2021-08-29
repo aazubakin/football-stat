@@ -1,12 +1,6 @@
 <template>
   <div class="about">
     <h1>This is team list page</h1>
-    <form-call
-      @submit="getLigues"
-      @tokenChange="isDesabled = false"
-      :errorMessage="error"
-      :isDesabled="isDesabled"
-    ></form-call>
     <div class="mt-16">
       <ul
         v-if="teams"
@@ -25,33 +19,23 @@
   </div>
 </template>
 <script>
-import FormCall from "../components/FormCall.vue";
 import apiClient from "../utils/apiCalls";
 export default {
-  components: { FormCall },
   data() {
     return {
       teams: [],
-      isDesabled: false,
       error: null,
     };
   },
-  mounted() {
-    const token = localStorage.getItem("token");
+  created() {
     const params = this.$route.params.id;
-    if (localStorage.teams && token === localStorage.getItem("token")) {
-      this.teams = JSON.parse(localStorage.getItem("teams"));
-      this.isDesabled = true;
-      return;
-    }
     apiClient
-      .getStat(`competitions/${params}/teams/?plan=TIER_ONE`, token)
+      .getStat(`competitions/${params}/teams/?plan=TIER_ONE`)
       .then((response) => {
         console.log(response.data);
         const { teams } = response.data;
         localStorage.setItem("teams", JSON.stringify(teams));
         this.teams = JSON.parse(localStorage.getItem("teams"));
-        // this.isDesabled = true;
       })
       .catch((e) => (this.error = e));
   },

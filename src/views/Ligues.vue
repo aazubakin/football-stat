@@ -1,12 +1,6 @@
 <template>
   <div>
     <h1>This is team list page</h1>
-    <form-call
-      @submit="getLigues"
-      @tokenChange="isDesabled = false"
-      :errorMessage="error"
-      :isDesabled="isDesabled"
-    ></form-call>
     <div class="mt-16">
       <ul
         v-if="competitions"
@@ -17,19 +11,7 @@
           v-for="competition in competitions"
           :key="competition.id"
         >
-          <router-link :to="'/teams/' + competition.id">
-            <div>
-              <img
-                :src="
-                  competition.emblemUrl
-                    ? competition.emblemUrl
-                    : imgPath(competition.code)
-                "
-                :alt="competition.code"
-              />
-              <div class="mt-2">{{ competition.name }}</div>
-            </div>
-          </router-link>
+          <ligue-item :competition="competition"></ligue-item>
         </li>
       </ul>
     </div>
@@ -37,12 +19,12 @@
 </template>
 
 <script>
-import FormCall from "../components/FormCall.vue";
 import apiClient from "../utils/apiCalls";
+import LigueItem from "../components/LigueItem.vue";
 export default {
   name: "Ligues",
   components: {
-    FormCall,
+    LigueItem,
   },
   data() {
     return {
@@ -52,36 +34,20 @@ export default {
     };
   },
   computed: {},
-  mounted() {
-    this.competitions = JSON.parse(localStorage.getItem("competitions"));
-  },
-  methods: {
-    test() {
-      console.log(this);
-    },
-    getLigues(token) {
-      if (
-        localStorage.competitions &&
-        token === localStorage.getItem("token")
-      ) {
-        this.competitions = JSON.parse(localStorage.getItem("competitions"));
-        this.isDesabled = true;
-        return;
-      }
+  created() {
+    const competitions = JSON.parse(localStorage.getItem("competitions"));
+    if (competitions) this.competitions = competitions;
+    else {
       apiClient
-        .getStat("competitions/?plan=TIER_ONE", token)
+        .getStat("competitions/?plan=TIER_ONE")
         .then((response) => {
           console.log(response.data);
           const { competitions } = response.data;
+          this.competitions = competitions;
           localStorage.setItem("competitions", JSON.stringify(competitions));
-          this.competitions = JSON.parse(localStorage.getItem("competitions"));
-          this.isDesabled = true;
         })
-        .catch((e) => (this.error = e));
-    },
-    imgPath(code) {
-      return require("@/assets/ligues_icon/" + code + ".png");
-    },
+        .catch((error) => (this.error = error));
+    }
   },
 };
 </script>
