@@ -2,7 +2,7 @@
   <div id="app">
     <h1 class="mt-5 text-2xl">Турнирные таблицы результатов по футболу</h1>
     <div id="nav">
-      <router-link to="/">Список лиг</router-link>
+      <router-link to="/" v-if="$route.path !== '/'">На главную</router-link>
     </div>
     <router-view />
   </div>

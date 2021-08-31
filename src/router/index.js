@@ -11,25 +11,19 @@ const routes = [
     component: Ligues,
   },
   {
-    path: "/teams",
-    name: "Teams",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Teams.vue"),
-  },
-  {
+    name: "teams",
     path: "/teams/:id",
     component: () => import("../views/Teams.vue"),
+    props: true,
   },
   {
-    path: "/ligue_calendar",
     name: "LigueCalendar",
+    path: "/ligue_calendar:id",
     component: () => import("../views/LigueCalendar.vue"),
+    props: true,
   },
   {
-    path: "/team_calendar",
+    path: "/team_calendar:id",
     name: "TeamCalendar",
     component: () => import("../views/TeamCalendar.vue"),
   },

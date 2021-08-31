@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1>This is team list page</h1>
+    <h1 class="text-xl">Список лиг</h1>
     <div class="mt-16">
       <ul
         v-if="competitions"
         class="mx-auto w-4/6 grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center"
       >
         <li
-          class="w-24 cursor-pointer"
+          class="w-32 shadow-lg p-2 h-72"
           v-for="competition in competitions"
           :key="competition.id"
         >

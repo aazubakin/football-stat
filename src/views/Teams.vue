@@ -1,13 +1,18 @@
 <template>
   <div class="about">
-    <h1>This is team list page</h1>
+    <h1 class="text-xl">{{ competition.name }}</h1>
     <div class="mt-16">
       <ul
         v-if="teams"
         class="mx-auto w-4/6 grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center"
       >
         <li class="w-24 cursor-pointer" v-for="team in teams" :key="team.id">
-          <router-link :to="'/team_calendar' + team.id">
+          <router-link
+            :to="{
+              name: 'TeamCalendar',
+              params: { id: team.id, teamName: team.name },
+            }"
+          >
             <div>
               <img :src="team.crestUrl" :alt="team.name" />
               <div class="mt-2">{{ team.name }}</div>
@@ -24,20 +29,29 @@ export default {
   data() {
     return {
       teams: [],
+      competition: {},
       error: null,
     };
   },
   created() {
-    const params = this.$route.params.id;
-    apiClient
-      .getStat(`competitions/${params}/teams/?plan=TIER_ONE`)
-      .then((response) => {
-        console.log(response.data);
-        const { teams } = response.data;
-        localStorage.setItem("teams", JSON.stringify(teams));
-        this.teams = JSON.parse(localStorage.getItem("teams"));
-      })
-      .catch((e) => (this.error = e));
+    const competitionName = this.$route.params.competitionName;
+    const teams = JSON.parse(localStorage.getItem("teams"));
+    //safe request if LocalStorage already has teams
+    if (teams && teams.competition.name === competitionName)
+      this.teams = teams.teams;
+    else {
+      const teamId = this.$route.params.id;
+      apiClient
+        .getStat(`competitions/${teamId}/teams/?plan=TIER_ONE`)
+        .then((response) => {
+          console.log(response.data);
+          localStorage.setItem("teams", JSON.stringify(response.data));
+          const { teams, competition } = response.data;
+          this.teams = teams;
+          this.competition = competition;
+        })
+        .catch((error) => (this.error = error));
+    }
   },
 };
 </script>
