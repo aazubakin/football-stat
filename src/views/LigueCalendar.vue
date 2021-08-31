@@ -5,70 +5,31 @@
       <h1 class="text-xl">{{ competition.name }}</h1>
       <div class="container p-10 mx-auto">
         <div>
-          <div class="flex items-center justify-around mb-4">
-            <span class="block text-left"
-              >Количество матчей в лиге {{ count }}</span
+          <div class="flex items-center flex-wrap justify-center">
+            <span class="block text-left mb-4 mr-4"
+              >Количество матчей в лиге: {{ count }}</span
             >
-            <div class="flex">
-              <start-date v-model="dateFrom"></start-date>
-              <end-date v-model="dateTo"></end-date>
+            <div class="flex flex-wrap">
+              <start-date class="mb-4" v-model="dateFrom"></start-date>
+              <end-date class="mb-4" v-model="dateTo"></end-date>
             </div>
           </div>
-          <div class="flex flex-col text-left">
-            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div
-                class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
-              >
-                <div
-                  class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
-                >
-                  <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Date
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Status
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Home team
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Away team
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Score
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                      <match-row
-                        v-for="match in matches"
-                        :key="match.id"
-                        :match="match"
-                      ></match-row>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
+      </div>
+      <div class="min-h-screen bg-blue-100 py-5 text-left">
+        <div class="overflow-x-auto w-full">
+          <table
+            class="mx-auto max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-gray-300 overflow-hidden"
+          >
+            <table-header></table-header>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <match-row
+                v-for="match in matches"
+                :key="match.id"
+                :match="match"
+              ></match-row>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -80,8 +41,15 @@ import MatchRow from '../components/MatchRow.vue'
 import apiClient from '../utils/apiCalls'
 import StartDate from '../components/StartDate.vue'
 import EndDate from '../components/EndDate.vue'
+import TableHeader from '../components/TableHeader.vue'
 export default {
-  components: { MatchRow, Error, StartDate, EndDate },
+  components: {
+    MatchRow,
+    Error,
+    StartDate,
+    EndDate,
+    TableHeader,
+  },
   name: 'LigueCalendar',
   data() {
     return {
@@ -101,7 +69,7 @@ export default {
   },
   created() {
     const competitionName = this.$route.params.competitionName
-    const matches = JSON.parse(localStorage.getItem('matches'))
+    const matches = JSON.parse(localStorage.getItem('matchesLigue'))
     //safe request if LocalStorage already has matches
     if (matches && matches.competition.name === competitionName)
       this.mathces = matches.matches
@@ -119,7 +87,7 @@ export default {
         .then((response) => {
           console.log(response.data)
           const { matches, competition, count } = response.data
-          localStorage.setItem('matches', JSON.stringify(response.data))
+          localStorage.setItem('matchesLigue', JSON.stringify(response.data))
           this.matches = matches
           this.competition = competition
           this.count = count

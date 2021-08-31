@@ -3,12 +3,17 @@
     <error v-if="isError" :error="error"></error>
     <div v-if="!isError">
       <h1 class="text-xl">{{ competition.name }}</h1>
+      <search-field v-model="search" class="flex justify-center"></search-field>
       <div class="mt-16">
         <ul
           v-if="teams"
           class="mx-auto w-4/6 grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center"
         >
-          <li class="w-24 cursor-pointer" v-for="team in teams" :key="team.id">
+          <li
+            class="w-24 cursor-pointer"
+            v-for="team in searchResult"
+            :key="team.id"
+          >
             <router-link
               :to="{
                 name: 'TeamCalendar',
@@ -29,19 +34,24 @@
 <script>
 import apiClient from '../utils/apiCalls'
 import Error from '../components/Error.vue'
+import SearchField from '../components/SearchField.vue'
 export default {
   name: 'Teams',
-  components: { Error },
+  components: { Error, SearchField },
   data() {
     return {
       teams: [],
       competition: {},
       error: null,
+      search: '',
     }
   },
   computed: {
     isError() {
       return this.error && this.error.stack && this.error.message
+    },
+    searchResult() {
+      return this.teams.filter((item) => item.name.indexOf(this.search) !== -1)
     },
   },
   created() {

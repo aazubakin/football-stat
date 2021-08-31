@@ -12,7 +12,8 @@
     </td>
     <td class="px-6 py-2 whitespace-nowrap">
       <span
-        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-green-800"
+        :class="statusColor"
       >
         {{ match.status }}
       </span>
@@ -42,6 +43,10 @@ export default {
     },
   },
   computed: {
+    statusColor() {
+      if (this.match.status === 'SCHEDULED') return ['bg-yellow-100']
+      else return ['bg-green-100']
+    },
     isScore() {
       return (
         this.match.score.fullTime.homeTeam !== null &&
