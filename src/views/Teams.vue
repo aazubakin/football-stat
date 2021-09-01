@@ -2,9 +2,11 @@
   <div>
     <error v-if="isError" :error="error"></error>
     <div v-if="!isError">
-      <h1 class="text-xl">{{ competition.name }}</h1>
+      <h1 class="text-2xl font-bold">
+        Список команд: "{{ competition.name }}"
+      </h1>
       <search-field v-model="search" class="flex justify-center"></search-field>
-      <div class="mt-16">
+      <div>
         <ul
           v-if="teams"
           class="mx-auto w-4/6 grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center"
@@ -35,6 +37,8 @@
 import apiClient from '../utils/apiCalls'
 import Error from '../components/Error.vue'
 import SearchField from '../components/SearchField.vue'
+import API from '@/api'
+
 export default {
   name: 'Teams',
   components: { Error, SearchField },
@@ -58,14 +62,14 @@ export default {
     const competitionName = this.$route.params.competitionName
     const teams = JSON.parse(localStorage.getItem('teams'))
     //safe request if LocalStorage already has teams
-    if (teams && teams.competition.name === competitionName)
+    if (teams && teams.competition.name === competitionName) {
       this.teams = teams.teams
-    else {
+      this.competition = teams.competition
+    } else {
       const teamId = this.$route.params.id
       apiClient
-        .getStat(`competitions/${teamId}/teams/?plan=TIER_ONE`)
+        .getStat(API.teams.teamsList(teamId))
         .then((response) => {
-          console.log(response.data)
           localStorage.setItem('teams', JSON.stringify(response.data))
           const { teams, competition } = response.data
           this.teams = teams

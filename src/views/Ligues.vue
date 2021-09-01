@@ -2,9 +2,9 @@
   <div>
     <error v-if="isError" :error="error"></error>
     <div v-if="!isError">
-      <h1 class="text-xl">Список лиг</h1>
+      <h1 class="text-2xl font-bold">Список лиг</h1>
       <search-field v-model="search" class="flex justify-center"></search-field>
-      <div class="mt-16">
+      <div>
         <ul
           v-if="competitions"
           class="mx-auto w-4/6 grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center"
@@ -26,6 +26,8 @@
 import apiClient from '../utils/apiCalls'
 import LigueItem from '../components/LigueItem.vue'
 import SearchField from '../components/SearchField.vue'
+import API from '@/api'
+
 export default {
   name: 'Ligues',
   components: {
@@ -55,9 +57,8 @@ export default {
     if (competitions) this.competitions = competitions
     else {
       apiClient
-        .getStat('competitions/?plan=TIER_ONE')
+        .getStat(API.ligues.liguesList())
         .then((response) => {
-          console.log(response.data)
           const { competitions } = response.data
           this.competitions = competitions
           localStorage.setItem('competitions', JSON.stringify(competitions))

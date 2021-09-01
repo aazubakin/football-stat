@@ -2,7 +2,9 @@
   <div>
     <error v-if="isError" :error="error"></error>
     <div v-if="!isError">
-      <h1 class="text-xl">{{ competition.name }}</h1>
+      <h1 class="text-2xl font-bold">
+        Список матчей лиги: "{{ competition.name }}"
+      </h1>
       <div class="container p-10 mx-auto">
         <div>
           <div class="flex items-center flex-wrap justify-center">
@@ -42,6 +44,8 @@ import apiClient from '../utils/apiCalls'
 import StartDate from '../components/StartDate.vue'
 import EndDate from '../components/EndDate.vue'
 import TableHeader from '../components/TableHeader.vue'
+import API from '@/api'
+
 export default {
   components: {
     MatchRow,
@@ -83,9 +87,8 @@ export default {
         dateTo: this.dateTo,
       }
       apiClient
-        .getStat(`competitions/${competitionId}/matches`, params)
+        .getStat(API.ligues.ligueMatches(competitionId), params)
         .then((response) => {
-          console.log(response.data)
           const { matches, competition, count } = response.data
           localStorage.setItem('matchesLigue', JSON.stringify(response.data))
           this.matches = matches
